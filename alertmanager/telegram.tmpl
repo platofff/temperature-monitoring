@@ -1,0 +1,7 @@
+{{ define "telegram.default.message" }}
+{{ range .Alerts }}
+{{ if eq .Status "firing"}}🔥 <b>{{ .Status | toUpper }}</b> 🔥{{ else }}<b>{{ .Status | toUpper }}</b>{{ end }}
+<b>{{ .Labels.alertname }}</b>
+{{ .Annotations.message }}
+{{ end }}
+{{ end }}

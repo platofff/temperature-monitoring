@@ -1,0 +1,14 @@
+route:
+  receiver: 'telegram_native'
+
+templates:
+- '/etc/alertmanager/alert.tmpl'
+
+receivers:
+  - name: 'telegram_native'
+    telegram_configs:
+    - bot_token: '<BOT TOKEN>'
+      chat_id: <CHAT ID>
+      send_resolved: true
+      api_url: "https://api.telegram.org"
+      parse_mode: HTML

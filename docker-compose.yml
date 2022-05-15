@@ -1,0 +1,49 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.retention.size=1GB
+    - --log.level=debug
+    volumes:
+    - ./prometheus:/etc/prometheus:ro
+    depends_on:
+    - exporter
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+    - grafana_etc:/etc/grafana
+    - grafana_var_lib:/var/lib/grafana
+    - ./provisioning:/etc/grafana/provisioning
+    depends_on:
+    - prometheus
+    restart: always
+
+  exporter:
+    build: exporter
+    volumes:
+      - exporter_data:/exporter
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    restart: always
+
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/:ro
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    depends_on:
+    - prometheus
+
+volumes:
+  grafana_var_lib:
+  grafana_etc:
+  exporter_data:

@@ -1,0 +1,10 @@
+groups:
+- name: temperature
+  rules:
+  - alert: "Перегрев"
+    expr: temperature >= 40
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      message: "<b>{{ $labels.name }}</b>: температура превысила 40С"

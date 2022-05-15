@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import serial
+
+with serial.Serial('/dev/ttyACM0', 9600) as ser:
+    ser.write(b"thermometer.read('C')\r\n")
+    line = ''
+    while not line.startswith('='):
+        line = ser.readline().decode()
+
+print('#TYPE temperature gauge')
+print('temperature{name="Датчик 1"} ' + line[1:].rstrip())
